@@ -1,5 +1,6 @@
 package com.cNealgithub.RESTAPIs.service.IMPL;
 
+import com.cNealgithub.RESTAPIs.DTO.addStudentDTO;
 import com.cNealgithub.RESTAPIs.DTO.studentDTO;
 import com.cNealgithub.RESTAPIs.entity.student;
 import com.cNealgithub.RESTAPIs.repository.studentRepository;
@@ -31,5 +32,20 @@ public class studentServieImpl implements studentService {
     public studentDTO getStudentById( int id) {
         student std = studentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Student with id: " + id + " is not present"));
         return modelMapper.map(std, studentDTO.class);
+    }
+
+    @Override
+    public studentDTO createStudent(addStudentDTO addStudentDTO) {
+        student std = modelMapper.map(addStudentDTO, student.class);
+        student student = studentRepository.save(std);
+        return modelMapper.map(student, studentDTO.class);
+    }
+
+    @Override
+    public void deleteStudent(int id) {
+        if(!studentRepository.existsById(id)){
+             throw new IllegalArgumentException("Student does not exist with id: " + id);
+        }
+        studentRepository.deleteById(id);
     }
 }
