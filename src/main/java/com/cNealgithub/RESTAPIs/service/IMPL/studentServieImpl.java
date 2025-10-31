@@ -5,12 +5,13 @@ import com.cNealgithub.RESTAPIs.DTO.studentDTO;
 import com.cNealgithub.RESTAPIs.entity.student;
 import com.cNealgithub.RESTAPIs.repository.studentRepository;
 import com.cNealgithub.RESTAPIs.service.studentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.List;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class studentServieImpl implements studentService {
@@ -47,5 +48,34 @@ public class studentServieImpl implements studentService {
              throw new IllegalArgumentException("Student does not exist with id: " + id);
         }
         studentRepository.deleteById(id);
+    }
+
+    @Override
+    public studentDTO updateStudent(int id, addStudentDTO addStudentDTO) {
+        student student = studentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Student with id: " + id + " is not preset"));
+        modelMapper.map(addStudentDTO , student);
+         studentRepository.save(student);
+        return modelMapper.map(student, studentDTO.class);
+    }
+
+    @Override
+    public studentDTO updatePatchStudent(int id, Map<String, Object> updates) {
+        student student = studentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Student not found with id: " + id));
+        updates.forEach((field, value) ->{
+            switch(field){
+                case "name": student.setName((String)value);
+                break;
+
+                case "email": student.setEmail((String)value);
+                break;
+
+                default:
+                    throw new IllegalArgumentException("Invalid fields");
+            }
+        });
+        student savedStudent = studentRepository.save(student);
+        return modelMapper.map(savedStudent, studentDTO.class);
     }
 }
