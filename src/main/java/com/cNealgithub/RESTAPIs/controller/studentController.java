@@ -5,6 +5,7 @@ import com.cNealgithub.RESTAPIs.entity.student;
 import com.cNealgithub.RESTAPIs.service.studentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -22,5 +23,9 @@ public class studentController {
     @GetMapping("/allStudent")
     public List<studentDTO> getAllStudent(){
         return studentService.grtAllStudents();
+    }
+    @GetMapping("/Student/{id}")
+    public studentDTO getStudentById(@PathVariable int id){
+        return studentService.getStudentById(id);
     }
 }

@@ -7,4 +7,5 @@ import java.util.List;
 public interface studentService {
 
     List<studentDTO> grtAllStudents();
+    studentDTO getStudentById(int id);
 }
